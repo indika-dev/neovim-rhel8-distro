@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+podman build --cap-add SYS_ADMIN --device /dev/fuse --tag localhost/neovim-rhel8:latest --volume "${PWD}"/dist:/dist .
+# podman run -d -v "$PWD/data":/data -p 5080:5080 orlandohohmeier/local-npm:latest
+podman run -it -v "${PWD}":/mnt/volume --workdir=/mnt/volume -v "${PWD}"/config-nvim:/root/.config/nvim -v "${PWD}"/share-nvim:/root/.local/share/nvim localhost/neovim-rhel8:latest
+read -r -p "Soll eine neue Distro erstellt werden? (j/n)" CREATE_DISTRO
+if [ "$CREATE_DISTRO" = "j" ] || [ "$CREATE_DISTRO" = "J" ]; then
+	tar cvf rhel8-distro.tar ./config-nvim ./share-nvim
+fi
